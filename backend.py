@@ -1,5 +1,18 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+import os
+import json
+from firebase_admin import credentials, firestore
+
+firebase_key_json = os.environ.get("FIRE_CREDENTIALS")
+if firebase_key_json:
+    cred_dict = json.loads(firebase_key_json)
+    cred = credentials.Certificate(cred_dict)
+else:
+    cred = credentials.Certificate("raid-battle-ec1b5-firebase-adminsdk-fbsvc-f8612b9c98.json")
+if not firebase_admin._apps:
+    firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 app = FastAPI()
 
