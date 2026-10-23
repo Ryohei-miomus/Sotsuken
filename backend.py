@@ -104,7 +104,7 @@ A派とB派の意見を踏まえて提出された「解決案」を、次の3�
     }
     try:
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-1.5-flash',
             contents=prompt,
         )
         # レスポンスからJSON部分を綺麗に抽出
