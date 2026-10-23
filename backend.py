@@ -1,9 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTP Exception
 from pydantic import BaseModel
 import os
 import json
 import firebase_admin
 from firebase_admin import credentials, firestore
+from google import genai
+
+client = genai.Client()
 
 firebase_key_json = os.environ.get("FIRE_CREDENTIALS")
 if firebase_key_json:
@@ -21,6 +24,8 @@ app = FastAPI()
 # バトル作成時に受け取るデータ
 class BattleCreateRequest(BaseModel):
     mode: str
+    theme: str | None = "社会の壁"
+    boss_hp: int | None = 100000
 
 class OpinionRequest(BaseModel):
     battle_id: str
