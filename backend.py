@@ -6,6 +6,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from google import genai
 
+api_key = os.environ.get("AQ.Ab8RN6KMZnOAAJkbJFkVYTLeX4l-OahFzs5INnPBfoAFA0FG7A")
 client = genai.Client()
 
 firebase_key_json = os.environ.get("FIRE_CREDENTIALS")
@@ -19,7 +20,6 @@ if not firebase_admin._apps:
 db = firestore.client()
 
 app = FastAPI()
-
 
 # バトル作成時に受け取るデータ
 class BattleCreateRequest(BaseModel):
