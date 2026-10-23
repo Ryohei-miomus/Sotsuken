@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import os
 import json
+import firebase_admin
 from firebase_admin import credentials, firestore
 
 firebase_key_json = os.environ.get("FIRE_CREDENTIALS")
