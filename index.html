@@ -508,7 +508,7 @@ atkBtn.addEventListener("click",async()=>{
   let j = { relevant: true, balance: 75, concrete: 70, feasible: 70, comment: "バックエンドからの判定結果です", ai: true };
 if(S.battleId){
     try{
-      const res = await fetch('/api/opinion', {
+      const res = await fetch('https://sotsuken-rnxb.onrender.com/api/opinion', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
