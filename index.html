@@ -311,7 +311,7 @@ function popup(txt){
 /* ---- バックエンドとの通信用関数 ---- */
 async function initBattleSession() {
   try {
-    const res = await fetch('/api/battle/create', {
+    const res = await fetch('https://sotsuken-rnxb.onrender.com/api/battle/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ mode: S.mode, theme: theme, boss_hp: S.diffHp })
@@ -338,7 +338,7 @@ function setAiStat() {
 async function checkServerStatus() {
     try {
         // 例として、サーバーに疎通確認用のリクエストを送る（または既存のエンドポイントを活用）
-        const res = await fetch('/api/battle/create', {
+        const res = await fetch('https://sotsuken-rnxb.onrender.com/api/battle/create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ mode: 'check', theme: 'check', boss_hp: 100 })
