@@ -1,0 +1,15 @@
+# 秘密鍵・環境設定
+firebase-key.json
+.env
+
+# Node.jsのライブラリ（GitHubに上げない）
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Pythonのキャッシュなど
+__pycache__/
+*.py[cod]
+.venv/
+venv/

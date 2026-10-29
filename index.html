@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js × Python × Gemini AI</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            min-height: 60px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Gemini AI チャットテスト</h1>
+    <p>テキストを入力して送信すると、Node.js経由でPythonのGemini APIが呼び出されます。</p>
+
+    <textarea id="inputText" placeholder="Geminiに質問したいことを入力してください..."></textarea>
+    <br>
+    <button id="sendBtn">送信する</button>
+
+    <h3>AIからの回答:</h3>
+    <div id="output" class="result-box">ここに結果が表示されます</div>
+
+    <script>
+        const sendBtn = document.getElementById('sendBtn');
+        const inputText = document.getElementById('inputText');
+        const outputDiv = document.getElementById('output');
+
+        sendBtn.addEventListener('click', async () => {
+            const text = inputText.value.trim();
+            if (!text) {
+                alert('テキストを入力してください');
+                return;
+            }
+
+            // 送信中のUI制御
+            sendBtn.disabled = true;
+            sendBtn.textContent = '生成中...';
+            outputDiv.textContent = 'AIからの回答を待っています...';
+
+            try {
+                const response = await fetch('http://localhost:3000/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.result) {
+                    outputDiv.textContent = data.result;
+                } else {
+                    outputDiv.textContent = 'エラー: ' + (data.error || '不明なエラーが発生しました');
+                }
+            } catch (err) {
+                outputDiv.textContent = '通信エラーが発生しました: Node.jsサーバーが起動しているか確認してください。\n(' + err.message + ')';
+            } finally {
+                // ボタンを元に戻す
+                sendBtn.disabled = false;
+                sendBtn.textContent = '送信する';
+            }
+        });
+    </script>
+
+</body>
+</html>
