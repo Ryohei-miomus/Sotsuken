@@ -51,7 +51,7 @@ body{font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;color:var
 .party.b{right:24px;background:linear-gradient(180deg,#c43360,#8f1b44);border:2px solid #ff6a98;box-shadow:0 0 22px rgba(255,80,130,.5)}
 .party .head{display:flex;align-items:center;gap:16px;height:66px;padding:0 12px;cursor:pointer}
 .party .badge{width:66px;height:66px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 0 0 3px rgba(255,255,255,.3)}
-.party .name{font-size:36px;font-weight:900;flex:1}
+.party .name{font-size:36px;font-weight:900;flex:1;min-width:0;white-space:nowrap;overflow:hidden}
 .party .chev{width:30px;height:30px;transition:transform .25s}.party.closed .chev{transform:rotate(180deg)}
 .members{background:#f4f7ff;border-radius:10px;margin-top:4px;color:#14285e;padding:4px 14px 6px;overflow:hidden;transition:max-height .3s;max-height:204px}
 .party.closed .members{max-height:38px}
@@ -68,7 +68,7 @@ body{font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;color:var
 .dmg{position:absolute;top:422px;width:326px;height:86px;z-index:3;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center}
 .dmg.a{left:36px;background:linear-gradient(180deg,#1b57e6,#0b2f95);border:2px solid #4b86ff;border-radius:16px 8px 8px 30px;box-shadow:0 0 18px rgba(60,110,255,.6)}
 .dmg.b{right:36px;background:linear-gradient(180deg,#c22f5e,#8c1540);border:2px solid #ff6a98;border-radius:8px 16px 30px 8px;box-shadow:0 0 18px rgba(255,80,130,.5)}
-.dmg .l{font-size:21px;font-weight:700;margin-top:2px}
+.dmg .l{font-size:21px;font-weight:700;margin-top:2px;max-width:100%;padding:0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dmg .n{display:flex;align-items:center;gap:20px;font-size:40px;font-weight:900;line-height:1.1}.dmg .n svg{width:42px;height:42px}
 .plate{position:absolute;left:366px;top:100px;width:796px;height:96px;z-index:3}
 .plate .box{position:absolute;left:4px;top:14px;width:792px;height:82px;background:rgba(7,22,78,.88);border:2px solid #2a56b8;border-radius:10px;box-shadow:0 0 14px rgba(50,100,230,.5)}
@@ -117,7 +117,7 @@ body{font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;color:var
 .aistat i{width:10px;height:10px;border-radius:50%;background:#7a88b8;display:inline-block}.aistat.on{color:#7bffb0}.aistat.on i{background:#4be88b;box-shadow:0 0 8px #4be88b}
 .tabs{position:absolute;left:222px;top:10px;display:flex;gap:6px}
 .tab{all:unset;cursor:pointer;height:34px;padding:0 18px;border-radius:10px;font-size:17px;font-weight:700;border:2px solid #2a4fb0;color:#9db3e6;display:flex;align-items:center;box-sizing:border-box}
-.tab:focus-visible{outline:3px solid #fff}.tab:disabled{cursor:not-allowed;opacity:.6}
+.tab:focus-visible{outline:3px solid #fff}.tab:disabled{cursor:not-allowed;opacity:.6}.tab{max-width:150px}.tab span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tab.a.on{background:linear-gradient(180deg,#2a7bff,#0b5af0);color:#fff;border-color:#4b86ff;box-shadow:0 0 12px rgba(60,110,255,.6)}
 .tab.b.on{background:linear-gradient(180deg,#d83468,#a3153f);color:#fff;border-color:#ff6a98;box-shadow:0 0 12px rgba(255,80,130,.55)}
 .speaker{position:absolute;left:14px;top:146px;height:26px;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:#9db3e6}
@@ -157,8 +157,14 @@ body{font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;color:var
 .dlgbox label{display:flex;align-items:center;gap:12px;font-size:19px;font-weight:700;cursor:pointer;margin-bottom:26px}.dlgbox input[type=checkbox]{width:22px;height:22px;accent-color:#2f86ff}
 .dlgbtn{display:flex;gap:16px;justify-content:flex-end}
 .dlgbtn button{all:unset;cursor:pointer;height:52px;padding:0 28px;border-radius:12px;font-size:21px;font-weight:900;display:flex;align-items:center;box-sizing:border-box}.dlgbtn button:focus-visible{outline:3px solid #fff}
-#resetNo,#endCont{background:#1a2f6a;border:2px solid #4b6bc4;color:#dce8ff}
-#resetOk,#endReset{background:linear-gradient(180deg,#e8467a,#b01a4a);color:#fff;box-shadow:0 0 14px rgba(255,80,130,.55)}
+#resetNo,#endCont,#lblNo{background:#1a2f6a;border:2px solid #4b6bc4;color:#dce8ff}
+#resetOk,#endReset,#lblOk{background:linear-gradient(180deg,#e8467a,#b01a4a);color:#fff;box-shadow:0 0 14px rgba(255,80,130,.55)}
+.lblrow{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.lblrow span{flex:none;width:96px;font-size:18px;font-weight:700;color:#9db3e6}
+.lblrow input{flex:1;min-width:0;height:50px;border:2px solid #4b86ff;border-radius:10px;background:#f2f6ff;color:#14285e;font:700 24px "Noto Sans JP",sans-serif;padding:0 14px;outline:none}
+.lblrow.b input{border-color:#ff6a98}
+.lblrow input:focus-visible{box-shadow:0 0 0 3px rgba(255,255,255,.85)}
+.lblerr{min-height:26px;font-size:17px;color:#ffd27a;margin:0 0 14px}
 .res{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:19px}
 .res th{text-align:left;padding:8px 12px 8px 0;color:#9db3e6;white-space:nowrap;vertical-align:top}.res td{padding:8px 0;border-bottom:1px solid rgba(75,134,255,.3)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -182,17 +188,17 @@ body{font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;color:var
   <div class="pill purple"><svg class="ico" viewBox="0 0 40 40"><circle cx="20" cy="21" r="16" fill="#9d86ff"/><path d="M9 10l4 7M31 10l-4 7" stroke="#9d86ff" stroke-width="5"/><circle cx="14" cy="21" r="3" fill="#fff"/><circle cx="26" cy="21" r="3" fill="#fff"/><path d="M14 28q6 4 12 0" stroke="#fff" stroke-width="2.5" fill="none"/></svg><span id="cdWrap"></span></div>
   <div class="setwrap">
     <button class="gearbtn" id="gearBtn" type="button" aria-label="設定" aria-haspopup="true" aria-expanded="false"><svg class="gear" viewBox="0 0 24 24" fill="#fff"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6a.5.5 0 0 0 .1-.6l-2-3.5a.5.5 0 0 0-.6-.2l-2.5 1a7.4 7.4 0 0 0-1.7-1l-.4-2.6a.5.5 0 0 0-.5-.4h-4a.5.5 0 0 0-.5.4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1a.5.5 0 0 0-.6.2l-2 3.5a.5.5 0 0 0 .1.6L4.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6a.5.5 0 0 0-.1.6l2 3.5c.1.2.4.3.6.2l2.5-1c.5.4 1.1.7 1.7 1l.4 2.6c0 .2.2.4.5.4h4c.3 0 .5-.2.5-.4l.4-2.6c.6-.3 1.2-.6 1.7-1l2.5 1c.2.1.5 0 .6-.2l2-3.5a.5.5 0 0 0-.1-.6zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg></button>
-    <div class="menu" id="menu" role="menu" hidden><button class="mi" id="resetBtn" type="button" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="#cfe0ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><span><b>ゲームをリセット</b><small>HP・意見・手札を最初に戻す</small></span></button></div>
+    <div class="menu" id="menu" role="menu" hidden><button class="mi" id="labelBtn" type="button" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="#cfe0ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l3.5-1 12-12-2.5-2.5-12 12zM15.5 5.5l3 3"/></svg><span><b>派閥名を設定</b><small>左右の派閥の呼び名を変える</small></span></button><button class="mi" id="resetBtn" type="button" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="#cfe0ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><span><b>ゲームをリセット</b><small>HP・意見・手札を最初に戻す</small></span></button></div>
   </div>
 </div>
 
-<section class="party a" id="pa"><div class="head" data-toggle><div class="badge"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="#1d5cf0" stroke-width="3"><circle cx="22" cy="22" r="5"/><ellipse cx="22" cy="10" rx="5" ry="8"/><ellipse cx="22" cy="34" rx="5" ry="8"/><ellipse cx="10" cy="22" rx="8" ry="5"/><ellipse cx="34" cy="22" rx="8" ry="5"/></svg></div><div class="name">賛成派</div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg></div>
-<div class="members"><div class="lab" data-toggle>メンバーを表示<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg></div><ul></ul><div class="addrow" data-side="a"><input type="text" maxlength="10" placeholder="名前を追加" aria-label="A派閥のメンバー名"><button type="button">追加</button></div></div></section>
-<section class="party b" id="pb"><div class="head" data-toggle><div class="badge"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="#c22f5e" stroke-width="3"><circle cx="22" cy="22" r="5"/><ellipse cx="22" cy="10" rx="5" ry="8"/><ellipse cx="22" cy="34" rx="5" ry="8"/><ellipse cx="10" cy="22" rx="8" ry="5"/><ellipse cx="34" cy="22" rx="8" ry="5"/></svg></div><div class="name">反対派</div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg></div>
-<div class="members"><div class="lab" data-toggle>メンバーを表示<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg></div><ul></ul><div class="addrow" data-side="b"><input type="text" maxlength="10" placeholder="名前を追加" aria-label="B派閥のメンバー名"><button type="button">追加</button></div></div></section>
+<section class="party a" id="pa"><div class="head" data-toggle><div class="badge"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="#1d5cf0" stroke-width="3"><circle cx="22" cy="22" r="5"/><ellipse cx="22" cy="10" rx="5" ry="8"/><ellipse cx="22" cy="34" rx="5" ry="8"/><ellipse cx="10" cy="22" rx="8" ry="5"/><ellipse cx="34" cy="22" rx="8" ry="5"/></svg></div><div class="name" data-side-name="a">賛成派</div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg></div>
+<div class="members"><div class="lab" data-toggle>メンバーを表示<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg></div><ul></ul><div class="addrow" data-side="a"><input type="text" maxlength="10" placeholder="名前を追加" aria-label="賛成派のメンバー名"><button type="button">追加</button></div></div></section>
+<section class="party b" id="pb"><div class="head" data-toggle><div class="badge"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="#c22f5e" stroke-width="3"><circle cx="22" cy="22" r="5"/><ellipse cx="22" cy="10" rx="5" ry="8"/><ellipse cx="22" cy="34" rx="5" ry="8"/><ellipse cx="10" cy="22" rx="8" ry="5"/><ellipse cx="34" cy="22" rx="8" ry="5"/></svg></div><div class="name" data-side-name="b">反対派</div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg></div>
+<div class="members"><div class="lab" data-toggle>メンバーを表示<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 9l7 7 7-7"/></svg></div><ul></ul><div class="addrow" data-side="b"><input type="text" maxlength="10" placeholder="名前を追加" aria-label="反対派のメンバー名"><button type="button">追加</button></div></div></section>
 
-<div class="dmg a"><div class="l">賛成派 最大ダメージ</div><div class="n"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M6 6l28 28M34 6L6 34"/></svg><span id="maxA">0</span></div></div>
-<div class="dmg b"><div class="l">反対派 最大ダメージ</div><div class="n"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M6 6l28 28M34 6L6 34"/></svg><span id="maxB">0</span></div></div>
+<div class="dmg a"><div class="l"><span data-side-name="a">賛成派</span> 最大ダメージ</div><div class="n"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M6 6l28 28M34 6L6 34"/></svg><span id="maxA">0</span></div></div>
+<div class="dmg b"><div class="l"><span data-side-name="b">反対派</span> 最大ダメージ</div><div class="n"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M6 6l28 28M34 6L6 34"/></svg><span id="maxB">0</span></div></div>
 
 <div class="plate"><div class="box"></div>
 <div class="ink"><input id="theme" type="text" value="社会の壁" maxlength="40" spellcheck="false" aria-label="ボスの名前(議論のテーマ)" title="クリックして入力(議論のテーマになります)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M3 21l3.5-1 12-12-2.5-2.5-12 12zM15.5 5.5l3 3"/></svg></div>
@@ -207,7 +213,7 @@ body{font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;color:var
 
 <section class="panel p2" id="p2">
 <h3><svg viewBox="0 0 30 30" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21v-3c-2.5-1.5-4-4-4-7a9 9 0 0 1 18 0c0 3-1.5 5.5-4 7v3z"/><path d="M11 25h8M12.5 28h5"/></svg>解決案を入力<span class="aistat" id="aistat"><i></i><span>AI判定 確認中</span></span></h3>
-<div class="tabs" role="tablist" aria-label="入力する派閥"><button type="button" role="tab" class="tab a on" data-side="a" aria-selected="true">賛成派の入力</button><button type="button" role="tab" class="tab b" data-side="b" aria-selected="false">反対派の入力</button></div>
+<div class="tabs" role="tablist" aria-label="入力する派閥"><button type="button" role="tab" class="tab a on" data-side="a" aria-selected="true" aria-label="賛成派の入力"><span data-side-name="a">賛成派</span></button><button type="button" role="tab" class="tab b" data-side="b" aria-selected="false" aria-label="反対派の入力"><span data-side-name="b">反対派</span></button></div>
 <textarea id="ta" maxlength="500"></textarea>
 <div class="judge" id="judge" role="status" aria-live="polite"></div>
 <button class="reg" id="reg" type="button"><svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><rect x="4" y="7" width="18" height="22" rx="3"/><path d="M10 3h16a2 2 0 0 1 2 2v20M13 18h6M16 15v6"/></svg>手札に登録</button>
@@ -221,6 +227,7 @@ body{font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;color:var
 <section class="panel p3"><h3><svg viewBox="0 0 30 30" fill="#fff"><path d="M7 3h11l6 6v18H7z"/><path d="M18 3v6h6" fill="#bcd0ff"/><path d="M11 15h9M11 19h9M11 23h6" stroke="#0b1d4d" stroke-width="2"/></svg>最近のログ</h3><div class="logs" id="logs"></div></section>
 
 <div class="dlg" id="resetDlg" role="dialog" aria-modal="true" aria-labelledby="resetTitle"><div class="dlgbox"><h4 id="resetTitle">ゲームをリセットしますか?</h4><p>ボスと味方のHP、これまでの意見、手札、ログを最初の状態に戻します。この操作は元に戻せません。</p><label><input type="checkbox" id="resetMembers">メンバー名も消す</label><div class="dlgbtn"><button id="resetNo" type="button">キャンセル</button><button id="resetOk" type="button">リセットする</button></div></div></div>
+<div class="dlg" id="labelDlg" role="dialog" aria-modal="true" aria-labelledby="labelTitle"><div class="dlgbox"><h4 id="labelTitle">派閥名を設定</h4><p>テーマに合わせて、左右の派閥の呼び名を決められます(最大6文字)。戦闘が始まる前だけ変更できます。</p><div class="lblrow a"><span>左側(青)</span><input id="lblA" type="text" maxlength="6" autocomplete="off" spellcheck="false" aria-label="左側の派閥名"></div><div class="lblrow b"><span>右側(赤)</span><input id="lblB" type="text" maxlength="6" autocomplete="off" spellcheck="false" aria-label="右側の派閥名"></div><div class="lblerr" id="lblErr" role="alert"></div><div class="dlgbtn"><button id="lblNo" type="button">キャンセル</button><button id="lblOk" type="button">設定する</button></div></div></div>
 <div class="dlg" id="endDlg" role="dialog" aria-modal="true" aria-labelledby="endTitle"><div class="dlgbox" style="width:760px"><h4 id="endTitle"></h4><div id="endBody"></div><div class="dlgbtn"><button id="endCont" type="button"></button><button id="endReset" type="button">もう一度(名前は引き継ぐ)</button></div></div></div>
 </div></div>
 
@@ -242,6 +249,9 @@ addEventListener("load",fit);fit();
 const S={battleId:null, bossMax:100000,boss:100000,allyMax:80000,ally:80000,turn:1,cd:3,side:"賛成",maxA:0,maxB:0,over:false,
   mode:"turn",diffHp:100000,started:false,elapsed:0,defeated:false,taken:0,dealt:{a:0,b:0},mvpA:"-",mvpB:"-"};
 const logs=[], names={a:[],b:[]};
+/* 派閥の表示名(内部ID a / b は固定。画面・ログ・AIへの文面にだけ使う) */
+const LABEL={a:"賛成派",b:"反対派"};
+const sideName=s=>LABEL[String(s).toLowerCase()];
 
 /* ---- ボス画像(同じフォルダに boss_normal.png / boss_injure.png / boss_lose.png) ---- */
 /*const BOSS_IMG={normal:"boss_normal.png",injure:"boss_injure.png",lose:"boss_lose.png"};
@@ -406,10 +416,10 @@ JSONだけを返してください: {"ok":true,"level":0.5,"reason":"日本語30
 }
 
 async function aiJudge(text,side){
-  const ctx=opinions.slice(-8).map(o=>`${o.side}派(${o.who}): ${o.text}`).join("\n");
+  const ctx=opinions.slice(-8).map(o=>`${sideName(o.side)}(${o.who}): ${o.text}`).join("\n");
   const prompt=`あなたは、協力型ディベートゲーム「レイドバトル」の審判です。ボス(立ちはだかる社会課題)の名前であり議論のテーマは、<theme> に書かれています。
-A派とB派の意見を踏まえて提出された「解決案」を、次の3つの軸で0?100点で採点してください。
-- balance: A派・B派どちらの主張も汲み取り、お互いが納得できる内容か
+${sideName("a")}と${sideName("b")}の意見を踏まえて提出された「解決案」を、次の3つの軸で0?100点で採点してください。
+- balance: ${sideName("a")}・${sideName("b")}どちらの主張も汲み取り、お互いが納得できる内容か
 - concrete: 具体的な行動や制度、数字などが示されているか
 - feasible: 現実的に実行できそうか
 解決案として成立していない場合(テーマと無関係、荒らし、中身がない、単なる悪口など)は relevant を false にしてください。
@@ -421,7 +431,7 @@ A派とB派の意見を踏まえて提出された「解決案」を、次の3�
 ${ctx}
 </opinions>
 
-<proposal side="${side}">
+<proposal side="${sideName(side)}">
 ${text}
 </proposal>
 
@@ -441,10 +451,10 @@ function localJudge(text){
 const jd=$("#judge");
 jd.addEventListener("click",()=>jd.classList.remove("show"));
 $("#ta").addEventListener("focus",()=>jd.classList.remove("show"));
-function showLoading(side){jd.innerHTML=`<div class="jh"><span class="tag ${side==="B"?"b":""}">${side}派</span>解決案を審査しています</div><div class="load"><span class="spin"></span>AI判定中…</div>`;jd.classList.add("show");}
+function showLoading(side){jd.innerHTML=`<div class="jh"><span class="tag ${side==="B"?"b":""}">${esc(sideName(side))}</span>解決案を審査しています</div><div class="load"><span class="spin"></span>AI判定中…</div>`;jd.classList.add("show");}
 function showResult(side,j,dmg,crit){
   const rows=[["両派への配慮",j.balance],["具体性",j.concrete],["実現可能性",j.feasible]].map(r=>`<div class="row"><span>${r[0]}</span><span class="tr"><b data-w="${r[1]}"></b></span><span class="sc">${r[1]}</span></div>`).join("");
-  jd.innerHTML=`<div class="jh"><span class="tag ${side==="B"?"b":""}">${side}派</span>${j.ai?"AI判定":"簡易判定"}<span class="dmgv">${dmg>0?(crit?"??CRITICAL ":"")+fmt(dmg)+" ダメージ":"ダメージなし"}</span></div>${rows}<div class="cm"></div>`;
+  jd.innerHTML=`<div class="jh"><span class="tag ${side==="B"?"b":""}">${esc(sideName(side))}</span>${j.ai?"AI判定":"簡易判定"}<span class="dmgv">${dmg>0?(crit?"??CRITICAL ":"")+fmt(dmg)+" ダメージ":"ダメージなし"}</span></div>${rows}<div class="cm"></div>`;
   jd.querySelector(".cm").textContent=(j.relevant?"":"解決案として成立していません。 ")+j.comment;
   jd.classList.add("show");
   requestAnimationFrame(()=>requestAnimationFrame(()=>jd.querySelectorAll(".tr b").forEach(b=>b.style.width=b.dataset.w+"%")));
@@ -464,9 +474,9 @@ const HAND_MAX=5,SEL_MAX=3,HINT="カードを選んで攻撃(最大3枚まで組
 const SIDES={a:{hand:[],sel:new Set(),draft:"",speaker:""},b:{hand:[],sel:new Set(),draft:"",speaker:""}};
 let cur="a",nextId=1;
 const handEl=$("#hand"),hintEl=$("#handHint"),ta=$("#ta"),speakerSel=$("#speakerSel");
-const label=s=>s.toUpperCase()+"派";
+const label=s=>sideName(s);
 function setBusy(v){
-  busy=v;atkBtn.disabled=v||S.over;ta.disabled=v;updateTabs();themeEl.disabled=v;speakerSel.disabled=v;$("#resetBtn").disabled=v;
+  busy=v;atkBtn.disabled=v||S.over;ta.disabled=v;updateTabs();themeEl.disabled=v;speakerSel.disabled=v;$("#resetBtn").disabled=v;$("#labelBtn").disabled=v;
   renderHand();atkLabel.textContent=v?"判定中…":"攻撃する";
 }
 function renderHand(){
@@ -576,12 +586,12 @@ function applyAttack(side,cards,dmg,crit){
     const w=c.speaker||"匿名";opinions.push({side:side.toUpperCase(),who:w,text:c.text});
     const el=document.createElement("div");el.className="op"+(side==="b"?" b":"");
     el.innerHTML=`<span class="who"><span class="dot">?</span><span class="wn"></span></span><p></p>`;
-    el.querySelector(".wn").textContent=side.toUpperCase()+"派 "+w;
+    el.querySelector(".wn").textContent=label(side)+" "+w;
     el.querySelector("p").textContent=c.text.length>60?c.text.slice(0,60)+"…":c.text;
     box.appendChild(el);
   });
   box.scrollTop=box.scrollHeight;
-  addLog(side,`${side.toUpperCase()}派閥が解決案を提出しました`);
+  addLog(side,`${label(side)}が解決案を提出しました`);
   S.side=side==="a"?"b":"a";
   S.turn++;if(S.mode==="turn")S.cd--;
   if(S.boss<=0){S.over=true;atkBtn.disabled=true;render();setTimeout(()=>{if(ep===epoch)showEnd(true);},1400);return;}
@@ -600,13 +610,13 @@ function bossAttack(pierce){
 function showEnd(win){
   const A=S.maxA>=S.maxB;
   const rows=[
-    ["最大ダメージ",`${fmt(Math.max(S.maxA,S.maxB))}(${A?"A":"B"}派 / ${A?S.mvpA:S.mvpB})`],
-    ["A派",`最大 ${fmt(S.maxA)}(MVP ${S.mvpA}) / 総与ダメージ ${fmt(S.dealt.a)}`],
-    ["B派",`最大 ${fmt(S.maxB)}(MVP ${S.mvpB}) / 総与ダメージ ${fmt(S.dealt.b)}`],
+    ["最大ダメージ",`${fmt(Math.max(S.maxA,S.maxB))}(${A?LABEL.a:LABEL.b} / ${A?S.mvpA:S.mvpB})`],
+    [LABEL.a,`最大 ${fmt(S.maxA)}(MVP ${S.mvpA}) / 総与ダメージ ${fmt(S.dealt.a)}`],
+    [LABEL.b,`最大 ${fmt(S.maxB)}(MVP ${S.mvpB}) / 総与ダメージ ${fmt(S.dealt.b)}`],
     ["総被ダメージ",fmt(S.taken)],
     S.mode==="turn"?["かかったターン",(S.turn-1)+"ターン"]:["かかった時間",hms(S.elapsed)]];
   $("#endTitle").textContent=win?"?? 「"+theme+"」を突破！":"?? もっと頑張りましょう";
-  $("#endBody").innerHTML=(win?"":"<p>課題が結論に至るまで続けるか、リセットしてやり直せます。</p>")+'<table class="res">'+rows.map(r=>`<tr><th>${r[0]}</th><td>${esc(r[1])}</td></tr>`).join("")+"</table>";
+  $("#endBody").innerHTML=(win?"":"<p>課題が結論に至るまで続けるか、リセットしてやり直せます。</p>")+'<table class="res">'+rows.map(r=>`<tr><th>${esc(r[0])}</th><td>${esc(r[1])}</td></tr>`).join("")+"</table>";
   $("#endCont").textContent=win?"閉じる":"続ける(幽霊状態)";
   $("#endDlg").classList.add("show");$("#endCont").focus();
 }
@@ -649,6 +659,41 @@ document.querySelectorAll(".addrow").forEach(row=>{
   row.querySelector("button").addEventListener("click",add);
   inp.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing)add();});
 });
+
+/* ---- 派閥名の設定(歯車メニュー → 派閥名を設定) ---- */
+const labelDlg=$("#labelDlg"),lblA=$("#lblA"),lblB=$("#lblB"),lblErr=$("#lblErr");
+const LABEL_MAX=6;
+function fitPartyName(el,txt){el.style.fontSize=Math.max(16,Math.min(36,Math.floor(134/[...txt].length)))+"px";}
+function applyLabels(){
+  document.querySelectorAll("[data-side-name]").forEach(el=>{el.textContent=LABEL[el.dataset.sideName];});
+  document.querySelectorAll(".party .name").forEach(el=>fitPartyName(el,LABEL[el.dataset.sideName]));
+  document.querySelectorAll(".addrow").forEach(r=>r.querySelector("input").setAttribute("aria-label",LABEL[r.dataset.side]+"のメンバー名"));
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-label",LABEL[t.dataset.side]+"の入力"));
+  setSide(cur);   // 入力欄の案内文・手札の見出しを更新
+}
+function openLabelDlg(){
+  if(busy)return;
+  if(S.started){note("派閥名は変更できません","戦闘が始まっています。リセットしてから変更してください");return;}
+  lblA.value=LABEL.a;lblB.value=LABEL.b;lblErr.textContent="";
+  labelDlg.classList.add("show");lblA.focus();lblA.select();
+}
+function closeLabelDlg(){labelDlg.classList.remove("show");$("#gearBtn").focus();}
+function saveLabels(){
+  const a=lblA.value.trim().replace(/\s+/g," "),b=lblB.value.trim().replace(/\s+/g," ");
+  const check=(v,where)=>!v?where+"の派閥名を入力してください"
+    :[...v].length>LABEL_MAX?where+"の派閥名は"+LABEL_MAX+"文字までです"
+    :NG_NAME.some(w=>v.includes(w))?where+"の派閥名に使えない言葉が含まれています":"";
+  const err=check(a,"左側")||check(b,"右側");
+  if(err){lblErr.textContent=err;return;}
+  if(a.toLowerCase()===b.toLowerCase()){lblErr.textContent="左右で同じ名前は付けられません";return;}
+  LABEL.a=a;LABEL.b=b;applyLabels();closeLabelDlg();
+}
+$("#labelBtn").addEventListener("click",()=>{setMenu(false);openLabelDlg();});
+$("#lblOk").addEventListener("click",saveLabels);
+$("#lblNo").addEventListener("click",closeLabelDlg);
+labelDlg.addEventListener("click",e=>{if(e.target===labelDlg)closeLabelDlg();});
+[lblA,lblB].forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();saveLabels();}}));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&labelDlg.classList.contains("show"))closeLabelDlg();});
 
 /* ---- リセット ---- */
 const resetDlg=$("#resetDlg");
