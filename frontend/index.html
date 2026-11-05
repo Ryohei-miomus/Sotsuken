@@ -531,51 +531,28 @@ atkBtn.addEventListener("click",async()=>{
   if(!picked.length){handEl.animate([{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"translateX(0)"}],{duration:200});hintEl.textContent="手札のカードを選んでから攻撃してください";return;}
   const text=picked.map(c=>c.text).join("\n"),side=cur.toUpperCase();
   setBusy(true);showLoading(side);
-  let dmg = 500;
-  let j = { relevant: true, balance: 75, concrete: 70, feasible: 70, comment: "バックエンドからの判定結果です", ai: true };
-if(S.battleId){
+  let j;
+  if(S.battleId){
     try{
       const res = await fetch('https://sotsuken-rnxb.onrender.com/api/opinion', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          battle_id: S.battleId,
-          side: cur,
-          text: text,
-          speaker: picked[0]?.speaker || "匿名"
-        })
+        body: JSON.stringify({ battle_id: S.battleId, side: cur, text: text, speaker: picked[0]?.speaker || "匿名" })
       });
       const data = await res.json();
-      if (data.opinion && typeof data.opinion.damage === 'number') {
-        j = data.opinion;
-        dmg = data.opinion.damage;
-        S.boss = data.boss_hp;
-        if (data.is_cleared) {
-          S.over = true;
-        }
-      } else {
-          j = localJudge(text);
-          dmg = calcDamage(j);
-      }
-    } catch (e) {
+      // 採点(balance等)だけサーバーの結果を使い、HPの計算はフロントで行う
+      j = (data.opinion && typeof data.opinion.damage === 'number') ? data.opinion : localJudge(text);
+    }catch(e){
       console.error("API ERROR, falling back to local calculation:", e);
       j = localJudge(text);
-      dmg = calcDamage(j);
-    } 
-  } else {
+    }
+  }else{
     j = localJudge(text);
-    dmg = calcDamage(j);
   }
-
-  // 古い aiJudge や sample の判定ブロックは完全に削除し、一貫して上の処理で決定した `j` を使って計算します
-  const base=calcDamage(j)*(1+0.1*(picked.length-1))*S.bossMax/6000;   // 組み合わせ+10%/枚、ボスHPに合わせてスケール
-  const crit=base>0&&Math.random()<0.05;                              // クリティカル率5%・ダメージ+50%
-  
-  // バックエンドからダメージが正しく取得できなかった場合はここで計算
-  if (crit) {
-    dmg=Math.round(dmg*1.5/10)*10;
-  }
-
+  // 組み合わせ+10%/枚、ボスHPに合わせてスケール
+  let dmg=Math.round(calcDamage(j)*(1+0.1*(picked.length-1))*S.bossMax/6000/10)*10;
+  const crit=dmg>0&&Math.random()<0.05;   // クリティカル率5%・ダメージ+50%
+  if(crit)dmg=Math.round(dmg*1.5/10)*10;
   showResult(side,j,dmg,crit);
   applyAttack(cur,picked,dmg,crit);
   P.hand=P.hand.filter(c=>!P.sel.has(c.id));
