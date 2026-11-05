@@ -195,7 +195,7 @@ body{font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;color:var
 <div class="dmg b"><div class="l">反対派 最大ダメージ</div><div class="n"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M6 6l28 28M34 6L6 34"/></svg><span id="maxB">0</span></div></div>
 
 <div class="plate"><div class="box"></div>
-<div class="ink"><input id="theme" type="text" value="社会の壁" maxlength="12" spellcheck="false" aria-label="ボスの名前(議論のテーマ)" title="クリックして入力(議論のテーマになります)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M3 21l3.5-1 12-12-2.5-2.5-12 12zM15.5 5.5l3 3"/></svg></div>
+<div class="ink"><input id="theme" type="text" value="社会の壁" maxlength="40" spellcheck="false" aria-label="ボスの名前(議論のテーマ)" title="クリックして入力(議論のテーマになります)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M3 21l3.5-1 12-12-2.5-2.5-12 12zM15.5 5.5l3 3"/></svg></div>
 <div class="hpl">HP <b id="bossHpTxt"></b></div><div class="bar"><i id="bossBar"></i></div></div>
 <div class="bossWrap"><img id="boss" alt="ボス" draggable="false"></div>
 
@@ -256,7 +256,34 @@ function updateBoss(){
 let theme="社会の壁";
 let cnt=0;
 const themeEl=$("#theme");
-const fitTheme=()=>{themeEl.style.width=Math.max(120,themeEl.value.length*33+12)+"px";};
+let themeRaf=0;
+const stopThemeScroll=()=>{cancelAnimationFrame(themeRaf);themeRaf=0;};
+const startThemeScroll=()=>{
+  stopThemeScroll();
+  if(document.activeElement===themeEl)return;   // 入力中は触らない(ブラウザ標準のスクロールに任せる)
+  themeEl.scrollLeft=0;
+  const max=themeEl.scrollWidth-themeEl.clientWidth;
+  if(max<=0)return;                             // はみ出していなければ何もしない
+  let pos=0,dir=1,wait=90;                      // wait: 端で止まるフレーム数
+  const step=()=>{
+    if(document.activeElement===themeEl){stopThemeScroll();return;}
+    if(wait>0){wait--;}
+    else{
+      pos+=dir*0.6;                             // 速度(px/フレーム)
+      if(pos>=max){pos=max;dir=-1;wait=90;}
+      else if(pos<=0){pos=0;dir=1;wait=90;}
+      themeEl.scrollLeft=pos;
+    }
+    themeRaf=requestAnimationFrame(step);
+  };
+  themeRaf=requestAnimationFrame(step);
+};
+const fitTheme=()=>{
+    themeEl.style.width=Math.min(420,Math.max(120,themeEl.value.length*33+12))+"px";
+  startThemeScroll();
+};
+themeEl.addEventListener("focus",stopThemeScroll);
+themeEl.addEventListener("blur",startThemeScroll);
 themeEl.addEventListener("focus",()=>themeEl.select());
 themeEl.addEventListener("input",fitTheme);
 themeEl.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing)themeEl.blur();});
