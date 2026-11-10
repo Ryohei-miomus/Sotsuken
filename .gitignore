@@ -12,4 +12,4 @@ yarn-error.log*
 __pycache__/
 *.py[cod]
 .venv/
-venv/
+venv/raid-battle-*.json
