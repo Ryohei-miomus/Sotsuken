@@ -1,0 +1,11 @@
+.target-element {
+  /* 古いブラウザ・現状の主要ブラウザ向けの旧プロパティ */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* 表示したい行数 */
+  
+  /* 将来・対応ブラウザ向けの標準プロパティ */
+  line-clamp: 3;
+  
+  overflow: hidden;
+}
