@@ -541,30 +541,35 @@ atkBtn.addEventListener("click",async()=>{
   if(!picked.length){handEl.animate([{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"translateX(0)"}],{duration:200});hintEl.textContent="手札のカードを選んでから攻撃してください";return;}
   const text=picked.map(c=>c.text).join("\n"),side=cur.toUpperCase();
   setBusy(true);showLoading(side);
-  let j;
+  let opinionData;
   if(S.battleId){
     try{
       const res = await fetch('https://sotsuken-rnxb.onrender.com/api/opinion', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ battle_id: S.battleId, side: cur, text: text, speaker: picked[0]?.speaker || "匿名" })
+        body: JSON.stringify({
+          battle_id: S.battleId,
+          side: cur,
+          text: text,
+          speaker: picked[0]?.speaker || "匿名",
+          card_count: picked.length
+        })
       });
       const data = await res.json();
-      // 採点(balance等)だけサーバーの結果を使い、HPの計算はフロントで行う
-      j = (data.opinion && typeof data.opinion.damage === 'number') ? data.opinion : localJudge(text);
+      opinionData = data.opinion;
     }catch(e){
-      console.error("API ERROR, falling back to local calculation:", e);
-      j = localJudge(text);
+      console.error("API ERROR, e);
     }
-  }else{
-    j = localJudge(text);
   }
-  // 組み合わせ+10%/枚、ボスHPに合わせてスケール
-  let dmg=Math.round(calcDamage(j)*(1+0.1*(picked.length-1))*S.bossMax/6000/10)*10;
-  const crit=dmg>0&&Math.random()<0.05;   // クリティカル率5%・ダメージ+50%
-  if(crit)dmg=Math.round(dmg*1.5/10)*10;
-  showResult(side,j,dmg,crit);
-  applyAttack(cur,picked,dmg,crit);
+  if(!opinionData){
+    opinionData = { damage: 100, crit: false, balance: 70, concrete: 70, feasible: 70, comment: "通信エラーの仮ダメージです", ai: false };
+  }
+  const dmg = opinionData.damage;
+  const crit = opinionData.crit;
+
+  showResult(side, opinionData, dmg, crit);
+  applyAttack(cur, picked, dmg, crit);
+
   P.hand=P.hand.filter(c=>!P.sel.has(c.id));
   P.sel.clear();
   setSide(S.side);
