@@ -558,7 +558,7 @@ atkBtn.addEventListener("click",async()=>{
       const data = await res.json();
       opinionData = data.opinion;
     }catch(e){
-      console.error("API ERROR, e);
+      console.error("API ERROR", e);
     }
   }
   if(!opinionData){
@@ -638,7 +638,10 @@ document.querySelectorAll("#mode button").forEach((b,i)=>b.addEventListener("cli
   const m=i===0?"time":"turn";
   if(m===S.mode)return;
   if(S.started){note("モードは変更できません","戦闘が始まっています。リセットしてから切り替えてください");return;}
-  S.mode=m;document.querySelectorAll("#mode button").forEach(x=>x.classList.remove("on"));b.classList.add("on");renderClock();
+  S.mode=m;
+  document.querySelectorAll("#mode button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");
+  renderClock();
 }));
 
 /* ---- メンバー追加(10文字・記号不可・重複は警告して続行で名前(1)) ---- */
