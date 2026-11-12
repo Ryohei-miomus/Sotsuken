@@ -248,6 +248,48 @@ addEventListener("resize",fit);addEventListener("orientationchange",fit);
 if(window.visualViewport)visualViewport.addEventListener("resize",fit);
 addEventListener("load",fit);fit();
 
+const firebaseConfig = {
+  apiKey: "AIzaSyArDoWRPAdKUZKY4avBLgxI19yl_5XJj_w",
+  authDomain: "raid-battle-ec1b5.firebaseapp.com",
+  databaseURL: "https://raid-battle-ec1b5-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "raid-battle-ec1b5",
+  storageBucket: "raid-battle-ec1b5.firebasestorage.app",
+  messagingSenderId: "715022300176",
+  appId: "1:715022300176:web:f9d88f298063da64280695",
+  measurementId: "G-HK0T8J910T"
+};
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.firestore();
+
+let unsubBattle = null;
+
+function subscribeBattle(battleId) {
+  // すでに別のリスナーが動いていれば解除
+  if (unsubBattle) unsubBattle();
+
+  // Firestoreの battles/{battleId} をリアルタイム監視
+  unsubBattle = db.collection("battles").document(battleId).onSnapshot((doc) => {
+    if (!doc.exists) return;
+    const data = doc.data();
+
+    // サーバー（DB）にある最新のステータスを反映
+    S.boss = data.boss_hp;
+    S.turn = data.turn;
+    S.over = (data.status === "cleared");
+    
+    if (data.status === "cleared" && !S.over) {
+      showEnd(true);
+    }
+
+    render();
+  }, (error) => {
+    console.error("Firestore sync error: ", error);
+  });
+}
+
 /* ---- 状態 ---- */
 const S={battleId:null, bossMax:100000,boss:100000,allyMax:80000,ally:80000,turn:1,cd:3,side:"賛成",maxA:0,maxB:0,over:false,
   mode:"turn",diffHp:100000,started:false,elapsed:0,defeated:false,taken:0,dealt:{a:0,b:0},mvpA:"-",mvpB:"-"};
@@ -358,8 +400,11 @@ async function initBattleSession() {
     });
     const data = await res.json();
     S.battleId = data.battle_id;
-    console.log("Battle session created:", S.battleId);
-  } catch (e) {
+    console.log("Battle session created:", S.battleId); 
+    if (S.battleId) {
+      subscribeBattle(S.battleId);
+    }
+  }catch (e) {
     console.error("Failed to connect to backend:", e);
   }
 }
