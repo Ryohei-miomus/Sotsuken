@@ -291,7 +291,7 @@ function subscribeBattle(battleId) {
 }
 
 /* ---- 状態 ---- */
-const S={battleId:null, bossMax:100000,boss:100000,allyMax:80000,ally:80000,turn:1,cd:3,side:"賛成",maxA:0,maxB:0,over:false,
+const S={battleId:null, bossMax:100000,boss:100000,allyMax:80000,ally:80000,turn:1,cd:3,missCount:0,side:"賛成",maxA:0,maxB:0,over:false,
   mode:"turn",diffHp:100000,started:false,elapsed:0,defeated:false,taken:0,dealt:{a:0,b:0},mvpA:"-",mvpB:"-"};
 const logs=[], names={a:[],b:[]};
 /* 派閥の表示名(内部ID a / b は固定。画面・ログ・AIへの文面にだけ使う) */
@@ -372,7 +372,7 @@ function addLog(type,text){logs.forEach(l=>l[2]=l[2]===0?1:l[2]+1);logs.unshift(
 /* ---- 表示更新 ---- */
 const memberCount=()=>Math.max(2,names.a.length+names.b.length);
 function renderClock(){
-  if(S.mode==="turn"){$("#turnWrap").textContent=S.turn+"ターン目";$("#cdWrap").innerHTML=`ボスの攻撃まであと <span class="big">${S.cd}</span> 意見`;}
+  if(S.mode==="turn"){$("#turnWrap").textContent=S.turn+"ターン目";$("#cdWrap").innerHTML=`連続ミスあと <span class="big">${3 - S.missCount}</span> 回でボスの攻撃`;}
   else{$("#turnWrap").textContent="経過 "+hms(S.elapsed);$("#cdWrap").innerHTML=`貫通攻撃まで <span class="big">${hms(600-S.elapsed%600).slice(3)}</span>`;}
 }
 function render(){
@@ -633,7 +633,13 @@ function applyAttack(side,cards,dmg,crit){
     S.boss=Math.max(0,S.boss-dmg);
     popup((crit?"CRITICAL! ":"")+"-"+fmt(dmg));
     const b=$("#boss");b.classList.remove("hit");void b.getBoundingClientRect();b.classList.add("hit");setTimeout(()=>b.classList.remove("hit"),500);
-  }else popup("MISS");
+    S.missCount = 0;
+  }else{
+    popup("MISS");
+    if(S.mode==="turn") {
+      S.missCount++;
+    }
+  }
   const box=$("#ops");
   cards.forEach(c=>{
     const w=c.speaker||"匿名";opinions.push({side:side.toUpperCase(),who:w,text:c.text});
@@ -648,7 +654,10 @@ function applyAttack(side,cards,dmg,crit){
   S.side=side==="a"?"b":"a";
   S.turn++;if(S.mode==="turn")S.cd--;
   if(S.boss<=0){S.over=true;atkBtn.disabled=true;render();setTimeout(()=>{if(ep===epoch)showEnd(true);},1400);return;}
-  if(S.mode==="turn"&&S.cd<=0){S.cd=3;setTimeout(()=>{if(ep===epoch)bossAttack(false);},900);}
+  if(S.mode==="turn"&&S.missCount >= 3){
+    S.missCount = 0;
+    setTimeout(()=>{if(ep===epoch)bossAttack(false);},900);
+  }
   render();
 }
 function bossAttack(pierce){
@@ -762,7 +771,7 @@ function doReset(){
     document.querySelectorAll(".members ul").forEach(u=>u.innerHTML="");
     Object.values(SIDES).forEach(P=>P.speaker="");
   }
-  Object.assign(S,{bossMax:S.diffHp,boss:S.diffHp,allyMax:Math.round(S.diffHp*.8),ally:Math.round(S.diffHp*.8),turn:1,cd:3,maxA:0,maxB:0,over:false,started:false,elapsed:0,defeated:false,taken:0,dealt:{a:0,b:0},mvpA:"-",mvpB:"-"});
+  Object.assign(S,{bossMax:S.diffHp,boss:S.diffHp,allyMax:Math.round(S.diffHp*.8),ally:Math.round(S.diffHp*.8),turn:1,cd:3,missCount:0,maxA:0,maxB:0,over:false,started:false,elapsed:0,defeated:false,taken:0,dealt:{a:0,b:0},mvpA:"-",mvpB:"-"});
   logs.length=0;renderLogs();opinions.length=0;$("#ops").innerHTML="";
   Object.values(SIDES).forEach(P=>{P.hand=[];P.sel.clear();P.draft="";});
   ta.value="";$("#cnt").textContent="0";
